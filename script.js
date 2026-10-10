@@ -4,19 +4,25 @@
 
 const CONFIG = {
   whatsapp: "5561999999999", // DDI + DDD + número, só dígitos
-  //taxaEntrega: 0, // em reais. Use 0 para desativar
   loja: "Faruk Sorvetes e Açaí",
 };
 
 // Valem para os produtos com "adicionais: true"
 const ADICIONAIS = [
-  { nome: "Leite em pó", preco: 2 },
-  { nome: "Granola extra", preco: 2 },
+  { nome: "Amendoim", preco: 0 },
+  { nome: "Leite em pó", preco: 0 },
+  { nome: "Paçoca", preco: 0 },
+  { nome: "Granola", preco: 0 },
+  { nome: "Leite condensado", preco: 0 },
+  { nome: "Maltine", preco: 4.5 },
+  { nome: "Nutella", preco: 4.5 },
 ];
 
 // foto: caminho da imagem, ex: "fotos/acai-premium.jpg"
 // Deixe "" para mostrar a inicial do produto
 // sub: subcategoria (opcional). Produtos com a mesma sub ficam juntos
+// adicionais: true libera os adicionais no produto
+// maxAdicionais: limite de adicionais (opcional). Sem ele, é ilimitado
 const PRODUTOS = [
   {
     cat: "Açaí",
@@ -49,51 +55,88 @@ const PRODUTOS = [
     cat: "Açaí",
     sub: "Cascões",
     nome: "Cestinha Cremosa",
-    desc: "Vem com banana e leite condensado",
+    desc: "com banana e leite condensado",
     foto: "fotos/cestinha_cremosa.png",
     tamanhos: [{ n: "padrão", p: 13.9 }],
     adicionais: false,
   },
   {
     cat: "Açaí",
-    sub: "Faruk Classic",
-    nome: "Açaí com Pistache",
-    desc: "Polpa de açaí, banana, granola e mel (opcional).",
-    foto: "",
+    sub: "Faruks",
+    nome: "Faruk Clássico",
+    desc: "Todos possuem 3 acompanhamentos grátis.",
+    foto: "fotos/faruk_classico.png",
     tamanhos: [
-      { n: "300 ml", p: 15 },
+      { n: "180 ml", p: 12 },
+      { n: "300 ml", p: 16 },
       { n: "400 ml", p: 20 },
+    ],
+    adicionais: true,
+    maxAdicionais: 3,
+  },
+  {
+    cat: "Açaí",
+    sub: "Faruks",
+    nome: "Faruk Premium",
+    desc: "Toppings ilimitados.",
+    foto: "fotos/faruk_classico.png",
+    tamanhos: [
+      { n: "300 ml", p: 21.9 },
       { n: "500 ml", p: 24.9 },
     ],
     adicionais: true,
   },
   {
     cat: "Açaí",
-    nome: "Açaí Premium",
-    desc: "Açaí, morango, banana, granola e leite em pó.",
-    foto: "",
+    sub: "Faruk Especiais",
+    nome: "Pistache",
+    desc: "Açaí, Pasta de pistache e castanha de pistache triturada.",
+    foto: "fotos/pistache.png",
     tamanhos: [
-      { n: "300 ml", p: 20 },
-      { n: "400 ml", p: 25 },
-      { n: "500 ml", p: 30 },
+      { n: "300 ml", p: 23.9 },
+      { n: "500 ml", p: 29.9 },
     ],
-    adicionais: true,
+    adicionais: false,
   },
   {
     cat: "Açaí",
-    nome: "Faruk Especial",
-    desc: "Açaí, frutas, granola, leite em pó e mel.",
-    foto: "",
+    sub: "Faruk Especiais",
+    nome: "Cacau",
+    desc: "Açaí com cacau 70% a dupla que faz seu dia mais saboroso!",
+    foto: "fotos/cacau.png",
     tamanhos: [
-      { n: "300 ml", p: 24.9 },
-      { n: "400 ml", p: 29.9 },
-      { n: "500 ml", p: 34.9 },
+      { n: "300 ml", p: 23.9 },
+      { n: "500 ml", p: 29.9 },
     ],
-    adicionais: true,
+    adicionais: false,
+  },
+  {
+    cat: "Açaí",
+    sub: "Faruk Gourmet",
+    nome: "Cookies",
+    desc: "Açaí com camadas generosas de Cookies cream especial.",
+    foto: "fotos/cookie.png",
+    tamanhos: [
+      { n: "300 ml", p: 21.9 },
+      { n: "500 ml", p: 26.9 },
+    ],
+    adicionais: false,
+  },
+  {
+    cat: "Açaí",
+    sub: "Faruk Gourmet",
+    nome: "Castanha-do-Pará",
+    desc: "Açaí preparado com castanhas do Pará trituradas e mel.",
+    foto: "fotos/castanha.png",
+    tamanhos: [
+      { n: "300 ml", p: 21.9 },
+      { n: "500 ml", p: 26.9 },
+    ],
+    adicionais: false,
   },
   {
     cat: "Sorvetes",
-    nome: "Sorvete Soft",
+    nome: "Sorvete de Ninho",
     desc: "Sorvete cremoso de máquina.",
     foto: "",
     tamanhos: [{ n: "300 ml", p: 15 }],
@@ -113,14 +156,6 @@ const PRODUTOS = [
     desc: "Escolha o sabor ao pedir.",
     foto: "",
     tamanhos: [{ n: "300 ml", p: 14 }],
-    adicionais: false,
-  },
-  {
-    cat: "Milk-shake",
-    nome: "Milk-shake 500 ml",
-    desc: "Escolha o sabor ao pedir.",
-    foto: "",
-    tamanhos: [{ n: "500 ml", p: 19 }],
     adicionais: false,
   },
 ];
@@ -268,7 +303,7 @@ function abrirProduto(indice) {
 
   const htmlAdicionais = produto.adicionais
     ? `
-        <h4>Adicionais</h4>
+        <h4>Adicionais${produto.maxAdicionais ? ` (até ${produto.maxAdicionais})` : ""}</h4>
         ${ADICIONAIS.map(
           (adicional, k) => `
             <label class="opcao">
@@ -291,11 +326,6 @@ function abrirProduto(indice) {
     ${htmlTamanhos}
 
     ${htmlAdicionais}
-
-    <label class="campo">
-      Observação (opcional)
-      <input id="obs" type="text" placeholder="Ex.: sem granola, sabor chocolate">
-    </label>
 
     <div class="qtd">
       <button id="menos" aria-label="Diminuir">−</button>
@@ -327,6 +357,18 @@ function abrirProduto(indice) {
     };
   }
 
+  // Trava as caixas não marcadas quando chega no limite
+  function limitarAdicionais() {
+    if (!produto.maxAdicionais) return;
+
+    const caixas = [...document.querySelectorAll("input[name=ad]")];
+    const marcadas = caixas.filter((caixa) => caixa.checked).length;
+
+    caixas.forEach((caixa) => {
+      caixa.disabled = !caixa.checked && marcadas >= produto.maxAdicionais;
+    });
+  }
+
   function atualizarBotao() {
     const { unit } = lerEscolhas();
     $("#add").textContent = `Adicionar • ${brl(unit * quantidade)}`;
@@ -336,7 +378,10 @@ function abrirProduto(indice) {
   $("#painel")
     .querySelectorAll("input")
     .forEach((campo) => {
-      campo.onchange = atualizarBotao;
+      campo.onchange = () => {
+        limitarAdicionais();
+        atualizarBotao();
+      };
     });
 
   $("#menos").onclick = () => {
@@ -358,7 +403,8 @@ function abrirProduto(indice) {
       nome: produto.nome,
       tamanho: tamanho.n,
       ads: adicionais.map((a) => a.nome),
-      obs: $("#obs").value.trim(),
+      extras: adicionais,
+      obs: "",
       qtd: quantidade,
       unit: unit,
     });
@@ -396,43 +442,15 @@ function abrirCarrinho() {
     <h2>Seu pedido</h2>
     <div id="linhas"></div>
 
-    <label class="campo">
-      Seu nome
-      <input id="nome" type="text" autocomplete="name">
-    </label>
-
-    <label class="campo">
-      Como receber?
-      <select id="tipo">
-        <option value="entrega">Entrega</option>
-        <option value="retirada">Retirada na loja</option>
-      </select>
-    </label>
-
-    <label class="campo" id="campoEnd">
-      Endereço de entrega
-      <input id="end" type="text" autocomplete="street-address">
-    </label>
-
-    <label class="campo">
-      Forma de pagamento
-      <select id="pag">
-        <option>Pix</option>
-        <option>Cartão</option>
-        <option>Dinheiro</option>
-      </select>
-    </label>
-
     <div class="total">
       <span>Total</span>
       <span id="total"></span>
     </div>
 
-    <button class="btn zap" id="enviar">Enviar pedido no WhatsApp</button>
     <button class="btn sec" id="fechar">Voltar ao cardápio</button>
   `);
 
-  // Redesenha lista de itens, endereço e total
+  // Redesenha lista de itens e total
   function redesenhar() {
     if (carrinho.length === 0) {
       fecharModal();
@@ -442,13 +460,27 @@ function abrirCarrinho() {
 
     $("#linhas").innerHTML = carrinho
       .map((item, k) => {
-        const detalhes = [...item.ads, item.obs].filter(Boolean).join(" • ");
+        // "Granola (grátis)", "Nutella (+ R$ 4,50)"
+        const listaExtras =
+          item.extras.length > 0
+            ? item.extras
+                .map((e) => `${e.nome} (${e.preco > 0 ? "+ " + brl(e.preco) : "grátis"})`)
+                .join(", ")
+            : "nenhum";
 
         return `
           <div class="linha-carrinho">
             <div>
               ${item.qtd}× ${item.nome} (${item.tamanho})
-              <small>${detalhes}</small>
+              <details class="detalhes">
+                <summary>Ver detalhes</summary>
+                <ul>
+                  <li>Tamanho: ${item.tamanho}</li>
+                  <li>Adicionais: ${listaExtras}</li>
+                  <li>Preço de cada: ${brl(item.unit)}</li>
+                  <li>Quantidade: ${item.qtd}</li>
+                </ul>
+              </details>
             </div>
             <div style="text-align: right">
               ${brl(item.unit * item.qtd)}<br>
@@ -469,67 +501,10 @@ function abrirCarrinho() {
         };
       });
 
-    const entrega = $("#tipo").value === "entrega";
-    const taxa = entrega ? CONFIG.taxaEntrega : 0;
-
-    $("#campoEnd").style.display = entrega ? "block" : "none";
-    $("#total").textContent = brl(subtotal() + taxa);
+    $("#total").textContent = brl(subtotal());
   }
 
-  function montarMensagem(nome, entrega, endereco) {
-    const taxa = entrega ? CONFIG.taxaEntrega : 0;
-
-    const linhasItens = carrinho.map((item) => {
-      let linha = `• ${item.qtd}x ${item.nome} (${item.tamanho})`;
-
-      if (item.ads.length > 0) linha += ` + ${item.ads.join(", ")}`;
-      if (item.obs) linha += ` — obs: ${item.obs}`;
-
-      return linha + ` = ${brl(item.unit * item.qtd)}`;
-    });
-
-    const mensagem = [
-      `*Novo pedido — ${CONFIG.loja}*`,
-      "",
-      ...linhasItens,
-      "",
-      `Subtotal: ${brl(subtotal())}`,
-      entrega ? `Entrega: ${brl(taxa)}` : "Retirada na loja",
-      `*Total: ${brl(subtotal() + taxa)}*`,
-      "",
-      `Nome: ${nome}`,
-    ];
-
-    if (entrega) mensagem.push(`Endereço: ${endereco}`);
-    mensagem.push(`Pagamento: ${$("#pag").value}`);
-
-    return mensagem.join("\n");
-  }
-
-  function enviarPedido() {
-    const nome = $("#nome").value.trim();
-    const endereco = $("#end").value.trim();
-    const entrega = $("#tipo").value === "entrega";
-
-    if (!nome) {
-      $("#nome").focus();
-      alert("Digite seu nome.");
-      return;
-    }
-
-    if (entrega && !endereco) {
-      $("#end").focus();
-      alert("Digite o endereço de entrega.");
-      return;
-    }
-
-    const texto = encodeURIComponent(montarMensagem(nome, entrega, endereco));
-    window.open(`https://wa.me/${CONFIG.whatsapp}?text=${texto}`, "_blank");
-  }
-
-  $("#tipo").onchange = redesenhar;
   $("#fechar").onclick = fecharModal;
-  $("#enviar").onclick = enviarPedido;
 
   redesenhar();
 }

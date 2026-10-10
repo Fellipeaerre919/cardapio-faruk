@@ -229,6 +229,11 @@ main {
   background: var(--roxo-claro);
 }
 
+.opcao:has(input:disabled) {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .opcao input {
   accent-color: var(--roxo);
   margin-right: 10px;
@@ -319,6 +324,27 @@ main {
 .linha-carrinho small {
   display: block;
   color: var(--cinza);
+}
+
+.detalhes {
+  margin-top: 8px;
+  padding: 10px 12px;
+  background: var(--roxo-claro);
+  border-radius: 10px;
+  font-size: 1rem;
+  color: var(--texto);
+}
+
+.detalhes summary {
+  cursor: pointer;
+  color: var(--roxo);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.detalhes ul {
+  margin: 8px 0 0 20px;
+  line-height: 1.7;
 }
 
 .linha-carrinho button {

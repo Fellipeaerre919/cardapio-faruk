@@ -41,7 +41,7 @@ button {
 
 /* ===== CABEÇALHO ===== */
 header {
-  background: var(--roxo-escuro);;
+  background: var(--roxo-escuro);
   color: #fff;
   padding: 28px 20px 56px;
   text-align: center;
@@ -165,6 +165,12 @@ main {
 .preco {
   font-weight: 900;
   color: var(--roxo);
+}
+
+.subtitulo {
+  margin-top: 20px;
+  color: var(--roxo);
+  font-size: 1.1rem;
 }
 
 /* ===== JANELA (MODAL) ===== */
@@ -353,14 +359,6 @@ label.campo select {
   font: inherit;
 }
 
-/* ===== RODAPÉ ===== */
-footer {
-  text-align: center;
-  color: var(--cinza);
-  font-size: 0.8rem;
-  padding: 24px 16px;
-}
-
 @media (prefers-reduced-motion: no-preference) {
   .painel {
     animation: sobe 0.22s ease-out;
@@ -371,4 +369,12 @@ footer {
       opacity: 0;
     }
   }
+}
+
+/* ===== RODAPÉ ===== */
+footer {
+  text-align: center;
+  color: var(--cinza);
+  font-size: 0.8rem;
+  padding: 24px 16px;
 }

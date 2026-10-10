@@ -16,10 +16,48 @@ const ADICIONAIS = [
 
 // foto: caminho da imagem, ex: "fotos/acai-premium.jpg"
 // Deixe "" para mostrar a inicial do produto
+// sub: subcategoria (opcional). Produtos com a mesma sub ficam juntos
 const PRODUTOS = [
   {
     cat: "Açaí",
-    nome: "Açaí Tradicional",
+    sub: "Cascões",
+    nome: "Cascão de Ninho",
+    desc: "",
+    foto: "fotos/cascao_ninho.png",
+    tamanhos: [{ n: "padrão", p: 6 }],
+    adicionais: false,
+  },
+  {
+    cat: "Açaí",
+    sub: "Cascões",
+    nome: "Cascão Misto",
+    desc: "",
+    foto: "fotos/cascao_misto.png",
+    tamanhos: [{ n: "padrão", p: 7 }],
+    adicionais: false,
+  },
+  {
+    cat: "Açaí",
+    sub: "Cascões",
+    nome: "Cascão de Açaí",
+    desc: "",
+    foto: "fotos/cascao_acai.png",
+    tamanhos: [{ n: "padrão", p: 8 }],
+    adicionais: false,
+  },
+  {
+    cat: "Açaí",
+    sub: "Cascões",
+    nome: "Cestinha Cremosa",
+    desc: "Vem com banana e leite condensado",
+    foto: "fotos/cestinha_cremosa.png",
+    tamanhos: [{ n: "padrão", p: 13.9 }],
+    adicionais: false,
+  },
+  {
+    cat: "Açaí",
+    sub: "Faruk Classic",
+    nome: "Açaí com Pistache",
     desc: "Polpa de açaí, banana, granola e mel (opcional).",
     foto: "",
     tamanhos: [
@@ -43,7 +81,7 @@ const PRODUTOS = [
   },
   {
     cat: "Açaí",
-    nome: "Açaí Especial",
+    nome: "Faruk Especial",
     desc: "Açaí, frutas, granola, leite em pó e mel.",
     foto: "",
     tamanhos: [
@@ -143,16 +181,27 @@ function htmlFoto(produto) {
 }
 
 function desenharLista() {
-  const itens = PRODUTOS.map((produto, indice) => ({ produto, indice })).filter(
-    (x) => x.produto.cat === categoriaAtual,
-  );
+  const itens = PRODUTOS.map((produto, indice) => ({ produto, indice }))
+    .filter((x) => x.produto.cat === categoriaAtual)
+    // produtos sem subcategoria vêm primeiro
+    .sort((a, b) => Boolean(a.produto.sub) - Boolean(b.produto.sub));
+
+  let subAnterior = "";
 
   $("#lista").innerHTML = itens
     .map(({ produto, indice }) => {
       const menorPreco = Math.min(...produto.tamanhos.map((t) => t.p));
       const prefixo = produto.tamanhos.length > 1 ? "a partir de " : "";
 
+      // mostra o título da subcategoria quando ela muda
+      const titulo =
+        produto.sub && produto.sub !== subAnterior
+          ? `<h3 class="subtitulo">${produto.sub}</h3>`
+          : "";
+      subAnterior = produto.sub;
+
       return `
+        ${titulo}
         <button class="item" data-i="${indice}">
           ${htmlFoto(produto)}
           <div>
